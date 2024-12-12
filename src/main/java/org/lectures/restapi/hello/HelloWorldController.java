@@ -26,6 +26,11 @@ public class HelloWorldController {
         return new HelloWorldBean("Hello World from a bean");
     }
 
+    @GetMapping("hello-world-bean-new")
+    public HelloWorldBean helloWorldBeanNew() {
+        return new HelloWorldBean("Hello World from a bean");
+    }
+
     @GetMapping("/hello-world/{name}")
     public HelloWorldBean helloWorldWithPathVariable(@PathVariable String name) {
         return new HelloWorldBean(String.format("Hello World, %s!", name));
@@ -33,7 +38,9 @@ public class HelloWorldController {
 
     @GetMapping("/hello-world-internationalized")
     public String helloWorldInternationalized() {
+
         Locale locale = LocaleContextHolder.getLocale();
+
         return messageSource.getMessage(
             "good.morning.message",
             null,
