@@ -18,7 +18,6 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<ErrorDetails> handleAllException(Exception ex, WebRequest request) throws Exception {
-
         ErrorDetails errorDetails = new ErrorDetails(
             LocalDateTime.now(),
             ex.getMessage(),

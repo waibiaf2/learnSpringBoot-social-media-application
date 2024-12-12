@@ -1,10 +1,8 @@
 package org.lectures.restapi.user;
 
-import jakarta.servlet.Servlet;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -52,7 +50,7 @@ public class UserResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody User user) throws UserNotFoundException {
+    public ResponseEntity<User> updateUser(@PathVariable Integer id, @Valid @RequestBody User user) throws UserNotFoundException {
         User updatedUser = userDaoService.update(id, user);
 
         if (updatedUser == null)
@@ -67,7 +65,7 @@ public class UserResource {
         userDaoService.delete(id);
 
         if (user == null)
-            throw new UserNotFoundException("User " + id + " not found");
+            throw new UserNotFoundException("User@RequestBody User user " + id + " not found");
 
         return new ResponseEntity<String>(
             "User Successfully Deleted",
