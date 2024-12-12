@@ -39,9 +39,17 @@ public class UserDaoService {
        return user;
     }
 
+    public User update(Integer id, User user) {
+        User userToUpdate = findOne(id);
+        if (userToUpdate != null) {
+            userToUpdate.setName(user.getName());
+            userToUpdate.setBirthDate(user.getBirthDate());
+        }
+        return userToUpdate;
+    }
+
     public void delete(Integer id) {
         Predicate<? super User > predicate = user -> Objects.equals(user.getId(), id);
         users.removeIf(predicate);
     }
-
 }

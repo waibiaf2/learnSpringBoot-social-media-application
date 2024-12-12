@@ -1,12 +1,18 @@
 package org.lectures.restapi.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
 public class User {
     private Integer id;
+
+    @Size(min = 2, max = 20, message = "Name must be between 2 and 20 characters")
     private String name;
+
+    @Past(message = "Birth date must be in the past")
     @JsonFormat(pattern = "yyyy/MM/dd")
     private LocalDate birthDate;
 

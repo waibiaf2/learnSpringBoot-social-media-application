@@ -1,6 +1,7 @@
 package org.lectures.restapi.user;
 
 import jakarta.servlet.Servlet;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
@@ -36,7 +37,7 @@ public class UserResource {
     }
 
     @PostMapping
-    public ResponseEntity<User> saveUser(@RequestBody User user) {
+    public ResponseEntity<User> saveUser(@Valid @RequestBody User user) {
         User createdUser = userDaoService.save(user);
 
         URI location = ServletUriComponentsBuilder
@@ -48,6 +49,16 @@ public class UserResource {
         return ResponseEntity
             .created(location)
             .body(createdUser);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody User user) throws UserNotFoundException {
+        User updatedUser = userDaoService.update(id, user);
+
+        if (updatedUser == null)
+            throw new UserNotFoundException("User " + id + " not found");
+
+        return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/{id}")
