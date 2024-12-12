@@ -1,10 +1,11 @@
 package org.lectures.restapi.filtering;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties({"field3"})
 public class SomeBean {
     private String field1;
-    @JsonIgnore
     private String field2;
     private String field3;
 
