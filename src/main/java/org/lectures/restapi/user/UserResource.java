@@ -28,9 +28,8 @@ public class UserResource {
         return ResponseEntity.ok(users);
     }
 
-
     @GetMapping("/{id}")
-    public ResponseEntity<User> retrieveUser(
+    public ResponseEntity<EntityModel<User> > retrieveUser(
         @PathVariable Integer id
     ) throws UserNotFoundException {
         User user = userDaoService.findOne(id);
@@ -38,7 +37,12 @@ public class UserResource {
         if (user == null)
             throw new UserNotFoundException("id: " + id);
 
-        return ResponseEntity.ok(user);
+        EntityModel<User> entityModel = EntityModel.of(user);
+
+        WebMvcLinkBuilder linkTo = WebMvcLinkBuilder.linkTo( methodOn(this.getClass()).retrieveAllUser());
+        entityModel.add(linkTo.withRel("all-users"));
+
+        return ResponseEntity.ok(entityModel);
     }
 
     @PostMapping
