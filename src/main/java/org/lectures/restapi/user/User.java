@@ -2,13 +2,18 @@ package org.lectures.restapi.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "users")
 public class User {
-    private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Size(min = 2, max = 20, message = "Name must be between 2 and 20 characters")
     @JsonProperty("user_name")
@@ -19,18 +24,21 @@ public class User {
     @JsonProperty("birth_date")
     private LocalDate birthDate;
 
-    public User(Integer id, String name, LocalDate birthDate) {
+    public User() {
+    }
+
+    public User(Long id, String name, LocalDate birthDate) {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
 
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

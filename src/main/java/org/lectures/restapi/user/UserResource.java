@@ -30,7 +30,7 @@ public class UserResource {
 
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<User> > retrieveUser(
-        @PathVariable Integer id
+        @PathVariable Long id
     ) throws UserNotFoundException {
         User user = userDaoService.findOne(id);
 
@@ -48,6 +48,7 @@ public class UserResource {
     @PostMapping
     public ResponseEntity<User> saveUser(@Valid @RequestBody User user) {
         User createdUser = userDaoService.save(user);
+        System.out.println(createdUser);
 
         URI location = ServletUriComponentsBuilder
             .fromCurrentRequest()
@@ -62,7 +63,7 @@ public class UserResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(
-        @PathVariable Integer id,
+        @PathVariable Long id,
         @Valid @RequestBody User user
     ) throws UserNotFoundException {
         User updatedUser = userDaoService.update(id, user);
@@ -74,7 +75,7 @@ public class UserResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         User user = userDaoService.findOne(id);
         userDaoService.delete(id);
 
