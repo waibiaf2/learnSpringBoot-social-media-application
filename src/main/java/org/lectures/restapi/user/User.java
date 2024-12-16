@@ -27,14 +27,18 @@ public class User {
     @JsonProperty("birth_date")
     private LocalDate birthDate;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
-    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Post> posts;
 
     protected User() {
     }
 
-    public User(Long id, String name, LocalDate birthDate, List<Post> posts) {
+    public User(
+        Long id,
+        String name,
+        LocalDate birthDate,
+        List<Post> posts
+    ) {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;

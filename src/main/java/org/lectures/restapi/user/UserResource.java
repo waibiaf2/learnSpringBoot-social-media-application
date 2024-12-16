@@ -1,6 +1,9 @@
 package org.lectures.restapi.user;
 
 import jakarta.validation.Valid;
+import org.lectures.restapi.post.Post;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
@@ -10,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -17,9 +21,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/users")
 public class UserResource {
     private final UserDaoService userDaoService;
+    private final UserRepository userRepository;
 
-    public UserResource(UserDaoService userDaoService) {
+    public UserResource(UserDaoService userDaoService, UserRepository userRepository) {
         this.userDaoService = userDaoService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping
@@ -29,7 +35,8 @@ public class UserResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EntityModel<User> > retrieveUser(
+    @EntityGraph(attributePaths = {"posts"})
+    public /*ResponseEntity<EntityModel<User>>*/ResponseEntity<User> retrieveUser(
         @PathVariable Long id
     ) throws UserNotFoundException {
         User user = userDaoService.findOne(id);
@@ -37,12 +44,12 @@ public class UserResource {
         if (user == null)
             throw new UserNotFoundException("id: " + id);
 
-        EntityModel<User> entityModel = EntityModel.of(user);
+        /*EntityModel<User> entityModel = EntityModel.of(user);
 
-        WebMvcLinkBuilder linkTo = WebMvcLinkBuilder.linkTo( methodOn(this.getClass()).retrieveAllUser());
-        entityModel.add(linkTo.withRel("all-users"));
+        WebMvcLinkBuilder linkTo = WebMvcLinkBuilder.linkTo(methodOn(this.getClass()).retrieveAllUser());
+        entityModel.add(linkTo.withRel("all-users"));*/
 
-        return ResponseEntity.ok(entityModel);
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping
@@ -64,14 +71,14 @@ public class UserResource {
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(
         @PathVariable Long id,
-        @Valid @RequestBody User user
+        @Valid @RequestBody User userData
     ) throws UserNotFoundException {
-        User updatedUser = userDaoService.update(id, user);
+        User user = userDaoService.update(id, userData);
 
-        if (updatedUser == null)
+        if (user == null)
             throw new UserNotFoundException("User " + id + " not found");
 
-        return ResponseEntity.ok(updatedUser);
+        return ResponseEntity.ok(user);
     }
 
     @DeleteMapping("/{id}")
@@ -86,5 +93,17 @@ public class UserResource {
             "User Successfully Deleted",
             HttpStatus.OK
         );
+    }
+
+    @GetMapping("{id}/posts")
+    public ResponseEntity<List<Post>> retrievePosts(@PathVariable Long id) {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isEmpty())
+            throw new UserNotFoundException("User " + id + " not found");
+
+        List<Post> UserPosts =  user.get().getPosts();
+
+        return ResponseEntity.ok(UserPosts);
     }
 }

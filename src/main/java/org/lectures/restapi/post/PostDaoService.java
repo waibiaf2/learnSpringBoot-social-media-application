@@ -16,8 +16,8 @@ public class PostDaoService {
         this.userRepository = userRepository;
     }
 
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
+    public List<Post> getAllPosts(User user) {
+        return postRepository.findByUser(user);
     }
 
     public Post getPostById(long id) {

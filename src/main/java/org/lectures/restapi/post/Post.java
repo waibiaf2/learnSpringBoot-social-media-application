@@ -9,24 +9,29 @@ import org.lectures.restapi.user.User;
 @Table(name = "posts")
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
     @Size(min = 1, max = 100)
     private String title;
     @Size(min = 1)
     private String body;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JsonIgnore
     private User user;
 
     protected Post() {}
 
-    public Post(User user, String body, String title, Long id) {
-        this.user = user;
-        this.body = body;
-        this.title = title;
+    public Post(
+        Long id,
+        String title,
+        String body,
+        User user
+    ) {
         this.id = id;
+        this.title = title;
+        this.body = body;
+        this.user = user;
     }
 
     public Long getId() {
